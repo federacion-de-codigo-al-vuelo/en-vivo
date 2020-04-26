@@ -1,0 +1,3 @@
+[submodule "en-vivo-backend"]
+	path = en-vivo-backend
+	url = git@github.com:federacion-de-codigo-al-vuelo/en-vivo-backend.git

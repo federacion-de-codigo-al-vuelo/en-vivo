@@ -1,0 +1,22 @@
+version: "3.4"
+services:
+
+  en-vivo-frontend:
+    container_name: en-vivo-frontend
+    image: en-vivo-frontend
+    restart: always
+    build: 
+      context: ./
+      dockerfile: ./en-vivo-frontend/Dockerfile.local
+      args:
+        EN_VIVO_BACKEND_API_URL: ${EN_VIVO_BACKEND_API_URL}
+        EN_VIVO_MEDIA_URL: ${EN_VIVO_MEDIA_URL}
+    volumes:
+      - ./en-vivo-frontend/:/en-vivo-frontend/
+    ports:
+      - "80:80"
+      - "10000:10000"
+    environment:
+      - PORT=80
+      - NODE_ENV=development
+

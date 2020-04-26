@@ -1,0 +1,62 @@
+version: "3.4"
+
+services:
+
+  mongo:
+    container_name: mongo
+    image: mongo
+    ports:
+      - "${MONGO_PORT}:27017"
+    volumes:
+      - db-en-vivo:/data/db
+    environment:        
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USR}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PWD}
+    restart: always
+    logging:
+      driver: none
+
+  imgproxy:
+    container_name: en-vivo-imgproxy
+    image: darthsim/imgproxy
+    ports: 
+      - "${SERVIDOR_MEDIA_IMGPROXY_PORT}:${SERVIDOR_MEDIA_IMGPROXY_PORT}"
+    environment: 
+      IMGPROXY_KEY: ${SERVIDOR_MEDIA_IMGPROXY_KEY}
+      IMGPROXY_SALT: ${SERVIDOR_MEDIA_IMGPROXY_SALT}
+
+  en-vivo-backend:
+    container_name: en-vivo-backend
+    restart: always
+    ports:
+      - "${EN_VIVO_BACKEND_PORT}:${EN_VIVO_BACKEND_PORT}"
+    build:
+      context: ./en-vivo-backend
+      dockerfile: ./Dockerfile.local
+      args: 
+        PORT: ${EN_VIVO_BACKEND_PORT}
+        NODE_ENV: production
+        MONGO_URI: mongodb://${MONGO_ROOT_USR}:${MONGO_ROOT_PWD}@${MONGO_HOST}:${MONGO_PORT}/${MONGO_DB}?authSource=admin
+        BUILD_STAGE: 1
+    volumes:
+      - archivos:/en-vivo-backend/archivos
+      - ./en-vivo-backend/:/en-vivo-backend
+    depends_on: 
+      - mongo
+      - imgproxy
+    environment:
+      PORT: ${EN_VIVO_BACKEND_PORT}
+      NODE_ENV: ${NODE_ENV}
+      MONGO_URI: mongodb://${MONGO_ROOT_USR}:${MONGO_ROOT_PWD}@${MONGO_HOST}:${MONGO_PORT}/${MONGO_DB}?authSource=admin
+      HOST: ${EN_VIVO_BACKEND_HOST}
+      DOMAIN: ${EN_VIVO_BACKEND_DOMAIN}
+      PORT: ${EN_VIVO_BACKEND_PORT}
+      MEDIA_FOLDER: ${EN_VIVO_BACKEND_MEDIA_FOLDER}
+      IMGPROXY_HOST: ${SERVIDOR_MEDIA_IMGPROXY_HOST}
+      IMGPROXY_PORT: ${SERVIDOR_MEDIA_IMGPROXY_PORT}
+      IMGPROXY_KEY: ${SERVIDOR_MEDIA_IMGPROXY_KEY}
+      IMGPROXY_SALT: ${SERVIDOR_MEDIA_IMGPROXY_SALT}
+
+volumes:
+  db-en-vivo:
+  archivos:
