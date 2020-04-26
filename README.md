@@ -10,7 +10,7 @@
 
 
 
-git clone --init --recursive git@...
+git clone --init --recursive https://github.com/federacion-de-codigo-al-vuelo/en-vivo.git
 
 cd en-vivo-backend
 yarn install en-vivo-backend
