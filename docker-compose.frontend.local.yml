@@ -14,9 +14,25 @@ services:
     volumes:
       - ./en-vivo-frontend/:/en-vivo-frontend/
     ports:
-      - "80:80"
+      - "${EN_VIVO_FRONTEND_PORT}:${EN_VIVO_FRONTEND_PORT}"
       - "10000:10000"
     environment:
-      - PORT=80
+      - PORT=${EN_VIVO_FRONTEND_PORT}
       - NODE_ENV=development
+
+  en-vivo-storybook:
+    container_name: en-vivo-storybook
+    image: en-vivo-storybook
+    restart: always
+    build: 
+      context: ./
+      dockerfile: ./en-vivo-frontend/Dockerfile.storybook
+      args:
+        EN_VIVO_STORYBOOK_PORT: ${EN_VIVO_STORYBOOK_PORT}
+        EN_VIVO_BACKEND_API_URL: ${EN_VIVO_BACKEND_API_URL}
+        EN_VIVO_MEDIA_URL: ${EN_VIVO_MEDIA_URL}
+    volumes:
+      - ./en-vivo-frontend/:/en-vivo-frontend/
+    ports:
+      - "${EN_VIVO_STORYBOOK_PORT}:${EN_VIVO_STORYBOOK_PORT}"
 
