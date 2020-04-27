@@ -24,3 +24,16 @@ cp .env.local .env
 docker-compose -f docker-compose.backend.local.yml -f docker-compose.backend.frontend.yml up
 
 ```
+
+
+Usando las variables default de nuestro **.env.local**, las rutas accesibles son las siguientes:
+
+
+### CMS:
+http://localhost:4000/admin
+
+### Frontend:
+http://localhost/
+
+### Storybook:
+http://localhost:8089/
